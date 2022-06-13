@@ -2,13 +2,30 @@ let deckId
 const cardsContainer = document.getElementById("cards")
 const newDeckBtn = document.getElementById("new-deck")
 const drawCardBtn = document.getElementById("draw-cards")
+
 const header = document.getElementById("header")
 const cardsRemaining = document.getElementById("cards-remaining")
 const card1 = document.getElementById("card-1")
 const card2 = document.getElementById("card-2")
+const modal = document.getElementById("modal")
+const overlay = document.getElementById("overlay")
 
 let scoreComputer = 0
 let scorePlayer = 0
+
+overlay.addEventListener("click", () => overlay.style.display = "none")
+
+
+function showModal(value) {
+    overlay.style.display = "inline"
+    modal.innerHTML = `
+    <h4>${value}</h4>
+    <button id="modal-btn">Click to Replay</button>
+    `
+    const modalBtn = document.getElementById("modal-btn")
+    modalBtn.addEventListener("click", ()=> location.reload())
+}
+
 
 function determineWinner(card1, card2) {
     cardArr = ["JACK", "QUEEN", "KING", "ACE"]
@@ -61,10 +78,10 @@ function handleDraw() {
 
         if (data.remaining == 0) {
             drawCardBtn.disabled = true
-            drawCardBtn.style.display = "none"
-            // drawCardBtn.classList.add("disabled")
-            header.style.fontSize = "3rem"
-            header.textContent = (scoreComputer > scorePlayer) ? "Computer Wins!" : (scoreComputer < scorePlayer) ? "You Win!" : "It's a Draw!"
+            drawCardBtn.classList.add("disabled")   
+            let winningTxt = (scoreComputer > scorePlayer) ? "Computer Wins!" : (scoreComputer < scorePlayer) ? "You Win!" : "It's a Draw!"
+            header.textContent = winningTxt
+            showModal(winningTxt)
             newDeckBtn.textContent = "Click to Replay"
             newDeckBtn.addEventListener("click", ()=> location.reload())
         }
