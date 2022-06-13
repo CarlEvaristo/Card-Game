@@ -2,6 +2,13 @@ let deckId
 const cardsContainer = document.getElementById("cards")
 const newDeckBtn = document.getElementById("new-deck")
 const drawCardBtn = document.getElementById("draw-cards")
+const header = document.getElementById("header")
+const cardsRemaining = document.getElementById("cards-remaining")
+const card1 = document.getElementById("card-1")
+const card2 = document.getElementById("card-2")
+
+let scoreComputer = 0
+let scorePlayer = 0
 
 function determineWinner(card1, card2) {
     cardArr = ["JACK", "QUEEN", "KING", "ACE"]
@@ -14,36 +21,58 @@ function determineWinner(card1, card2) {
     if (cardArr.includes(cardValue2)) {
         cardValue2 = cardArr.indexOf(cardValue2) + 11
     }
-    let message = (cardValue1 > cardValue2) ? "Computer Wins!" : (cardValue1 < cardValue2) ? "You Win!" : "War!"
-    return message
+
+    if (cardValue1 > cardValue2) {
+        scoreComputer += 1
+        return "Computer Wins!"
+    } else if (cardValue1 < cardValue2) {
+        scorePlayer += 1
+        return "You Win!"
+    } else {
+        return "War!"
+    } 
+
 }
 
 function handleClick() {
     fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1")
         .then(res => res.json())
-        .then(data => deckId = data.deck_id)
+        .then(data => {
+            drawCardBtn.classList.remove("disabled")
+            drawCardBtn.disabled = false
+            cardsRemaining.textContent = `Remaining Cards: ${data.remaining}`
+            deckId = data.deck_id
+        })
 }
 
 function handleDraw() {
     fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`)
     .then(res => res.json())
     .then(data => {
-        cardsContainer.children[0].innerHTML = `
-        <div class="card-placeholder"><img src="${data.cards[0].image}" alt="${data.cards[0].value} ${data.cards[0].suit}"></div>
+        cardsRemaining.textContent = `Remaining Cards: ${data.remaining}`
+        header.textContent = determineWinner(data.cards[0], data.cards[1])
+        card1.innerHTML = `
+        <h3>Computer: ${scoreComputer}</h3><div class="card-placeholder"><img src="${data.cards[0].image}" alt="${data.cards[0].value} ${data.cards[0].suit}"></div>
         `
-        cardsContainer.children[1].innerHTML = `
-        <div class="card-placeholder"><img src="${data.cards[1].image}" alt="${data.cards[1].value} ${data.cards[1].suit}"></div>
+        card2.innerHTML = `
+        <h3>You: ${scorePlayer}</h3><div class="card-placeholder"><img src="${data.cards[1].image}" alt="${data.cards[1].value} ${data.cards[1].suit}"></div>
         `
-        document.getElementById("game-message").textContent = determineWinner(data.cards[0], data.cards[1])
+
+
+        if (data.remaining == 0) {
+            drawCardBtn.disabled = true
+            drawCardBtn.style.display = "none"
+            // drawCardBtn.classList.add("disabled")
+            header.style.fontSize = "3rem"
+            header.textContent = (scoreComputer > scorePlayer) ? "Computer Wins!" : (scoreComputer < scorePlayer) ? "You Win!" : "It's a Draw!"
+            newDeckBtn.textContent = "Click to Replay"
+            newDeckBtn.addEventListener("click", ()=> location.reload())
+        }
     })
 }
 
 newDeckBtn.addEventListener("click", handleClick)
 drawCardBtn.addEventListener("click", handleDraw)
 handleClick()
-
-
-
-
 
 
