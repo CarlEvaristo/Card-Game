@@ -72,7 +72,16 @@ async function handleDraw() {
     computerScore.textContent = `Computer: ${score.computer}`
     card1.innerHTML = `<img src="${data.cards[0].image}" alt="${data.cards[0].value} ${data.cards[0].suit}">`
     setTimeout(() => {
+        card1.style.background =  `url("${data.cards[0].image}")`
+        card1.style.backgroundSize = "cover"
+    },400)
+
+    setTimeout(() => {
         card2.innerHTML = `<img src="${data.cards[1].image}" alt="${data.cards[1].value} ${data.cards[1].suit}">`
+        setTimeout(() => {
+            card2.style.background =  `url("${data.cards[1].image}")`
+            card2.style.backgroundSize = "cover"
+        },400)
     },200)
 
     if (data.remaining == 0) {
