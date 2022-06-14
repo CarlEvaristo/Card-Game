@@ -115,8 +115,8 @@ button:disabled {
     height: auto;
     margin: 30vh auto;
     border-radius:4px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.316);
-    background-color: #fff;
+    box-shadow: 0px 0px 35px rgba(0, 0, 0, 0.84);
+    background-color: rgb(245, 245, 245);
     color:#000;
     animation-name: modal-slide;
     animation-duration: 0.4s;
@@ -128,13 +128,13 @@ button:disabled {
 }
 
 #overlay {
+    background-color: rgba(2, 2, 2, 0.229);
     display:none;
     position:absolute;
     top:0px;
     bottom:0px;
     left:0px;
     right:0px;
-    background: #0000009e;
     z-index:1000;
 }
 #modal-btn {
@@ -143,6 +143,95 @@ button:disabled {
     margin: 0;
     margin-bottom:1em;
 }
+
+/* ===============  START OF CONFETTI  ================== */
+
+#confettis {
+    display: none;
+    overflow: hidden;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  }
+  .confetti {
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    transform-origin: left top;
+    animation: confetti 5s ease-in-out -2s infinite;
+  }
+  @keyframes confetti {
+    0% {
+      transform: rotateZ(15deg) rotateY(0deg) translate(0, 0);
+    }
+    25% {
+      transform: rotateZ(5deg) rotateY(360deg) translate(-5vw, 20vh);
+    }
+    50% {
+      transform: rotateZ(15deg) rotateY(720deg) translate(5vw, 60vh);
+    }
+    75% {
+      transform: rotateZ(5deg) rotateY(1080deg) translate(-10vw, 80vh);
+    }
+    100% {
+      transform: rotateZ(15deg) rotateY(1440deg) translate(10vw, 110vh);
+    }
+  }
+
+  .confetti:nth-child(1) {
+    left: 10%;
+    animation-delay: 0;
+    background-color: #fc0120;
+  }
+  .confetti:nth-child(2) {
+    left: 20%;
+    animation-delay: -5s;
+    background-color: #8257e6;
+  }
+  .confetti:nth-child(3) {
+    left: 30%;
+    animation-delay: -3s;
+    background-color: #ffbf4d;
+  }
+  .confetti:nth-child(4) {
+    left: 40%;
+    animation-delay: -2.5s;
+    background-color: #fe5d7a;
+  }
+  .confetti:nth-child(5) {
+    left: 50%;
+    animation-delay: -4s;
+    background-color: #45ec9c;
+  }
+  .confetti:nth-child(6) {
+    left: 60%;
+    animation-delay: -6s;
+    background-color: #f6e327;
+  }
+  .confetti:nth-child(7) {
+    left: 70%;
+    animation-delay: -1.5s;
+    background-color: #f769ce;
+  }
+  .confetti:nth-child(8) {
+    left: 80%;
+    animation-delay: -2s;
+    background-color: #007de7;
+  }
+  .confetti:nth-child(9) {
+    left: 90%;
+    animation-delay: -3.5s;
+    background-color: #63b4fc;
+  }
+  .confetti:nth-child(10) {
+    left: 100%;
+    animation-delay: -2.5s;
+    background-color: #f9c4ea;
+  }
+
+/* ===============  END OF CONFETTI  ================== */
+
 
 @media (min-width:700px) {
     #modal {

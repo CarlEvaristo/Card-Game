@@ -11,13 +11,17 @@ const modal = document.getElementById("modal")
 const overlay = document.getElementById("overlay")
 const computerScore = document.getElementById("computer-score")
 const playerScore = document.getElementById("player-score")
+const confetti = document.getElementById("confettis")
 
 let score = {
     computer: 0,
     player: 0
 }
 
-overlay.addEventListener("click", () => overlay.style.display = "none")
+overlay.addEventListener("click", () => {
+    overlay.style.display = "none"
+    confetti.style.display = "none"
+})
 
 function showModal(value) {
     overlay.style.display = "inline"
@@ -31,16 +35,9 @@ function showModal(value) {
 
 
 function determineWinner(card1, card2) {
-    cardArr = ["JACK", "QUEEN", "KING", "ACE"]
-    let cardValue1 = card1.value
-    let cardValue2 = card2.value
-    
-    if (cardArr.includes(cardValue1)) {
-        cardValue1 = cardArr.indexOf(cardValue1) + 11
-    }
-    if (cardArr.includes(cardValue2)) {
-        cardValue2 = cardArr.indexOf(cardValue2) + 11
-    }
+    cardArr = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "JACK", "QUEEN", "KING", "ACE"]
+    let cardValue1 =  cardArr.indexOf(card1.value)
+    let cardValue2 =  cardArr.indexOf(card2.value)
 
     if (cardValue1 > cardValue2) {
         score.computer += 1
@@ -69,28 +66,26 @@ async function handleClick() {
 async function handleDraw() {
     const response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`)
     const data = await response.json()
-
+    cardsRemaining.textContent = `Remaining Cards: ${data.remaining}`
+    header.textContent = determineWinner(data.cards[0], data.cards[1])
+    playerScore.textContent = `You: ${score.player}`
     computerScore.textContent = `Computer: ${score.computer}`
-    card1.innerHTML = `
-    <img src="${data.cards[0].image}" alt="${data.cards[0].value} ${data.cards[0].suit}">
-    `
-    setTimeout(()=> {
-        card2.innerHTML = `
-        <img src="${data.cards[1].image}" alt="${data.cards[1].value} ${data.cards[1].suit}">
-        `
-        cardsRemaining.textContent = `Remaining Cards: ${data.remaining}`
-        header.textContent = determineWinner(data.cards[0], data.cards[1])
-        playerScore.textContent = `You: ${score.player}`
+    card1.innerHTML = `<img src="${data.cards[0].image}" alt="${data.cards[0].value} ${data.cards[0].suit}">`
+    setTimeout(() => {
+        card2.innerHTML = `<img src="${data.cards[1].image}" alt="${data.cards[1].value} ${data.cards[1].suit}">`
     },200)
 
     if (data.remaining == 0) {
         drawCardBtn.disabled = true
-        drawCardBtn.classList.add("disabled")   
-        let winningTxt = (score.computer > score.player) ? "Computer Wins!" : (score.computer < score.player) ? "You Win!" : "It's a Tie Game!"
+        let winningTxt = (score.computer > score.player) ? "Computer Wins Game!" : (score.computer < score.player) ? "You Win Game!" : "It's a Tie Game!"
         header.textContent = winningTxt
-        setTimeout(()=> showModal(winningTxt),1000)
+        showModal(winningTxt)
         newDeckBtn.textContent = "Click to Replay"
         newDeckBtn.addEventListener("click", ()=> location.reload())
+        if (score.computer < score.player) {
+            confetti.style.display = "inline"
+        }
+
     }
 }
 
